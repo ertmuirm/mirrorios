@@ -1,1 +1,85 @@
+name: Build
 
+on:
+  # Trigger manually from GitHub UI
+  workflow_dispatch:
+  
+  # Trigger on push to main branch
+  push:
+    branches:
+      - main
+    paths:
+      - '**.plist'
+      - '**.app'
+      - 'Info.plist'
+      - 'Frameworks/**'
+      - 'PlugIns/**'
+
+jobs:
+  build:
+    runs-on: macos-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Get version info
+        id: version
+        run: |
+          # Extract version from Info.plist
+          VERSION=$(plutil -raw -key CFBundleShortVersionString Info.plist 2>/dev/null || echo "unknown")
+          BUILD=$(plutil -raw -key CFBundleVersion Info.plist 2>/dev/null || echo "1")
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "build=${BUILD}" >> $GITHUB_OUTPUT
+          echo "App Version: ${VERSION} (${BUILD})"
+      
+      - name: Create Payload directory structure
+        run: |
+          mkdir -p Payload/Replica.app
+          # Copy all app contents except README, .git, and build files
+          find . -maxdepth 1 -type f ! -name "README.md" ! -name ".git*" ! -name "build.sh" ! -name "*.sh" ! -name ".github" ! -name "*.ipa" -exec cp -r {} Payload/Replica.app/ \; 2>/dev/null || true
+          find . -maxdepth 1 -type d ! -name ".*" ! -name "Payload" ! -name "build" ! -name "*.app" -exec cp -r {} Payload/Replica.app/ \; 2>/dev/null || true
+          
+          # Ensure we have the core app files
+          ls -la Payload/Replica.app/ | head -20
+      
+      - name: Strip code signing
+        run: |
+          # Remove all code signature directories
+          find Payload/Replica.app -name "_CodeSignature" -type d -exec rm -rf {} + 2>/dev/null || true
+          
+          # Check Frameworks for code signing
+          find Payload/Replica.app/Frameworks -name "_CodeSignature" -type d -exec rm -rf {} + 2>/dev/null || true
+          
+          # Check PlugIns for code signing
+          find Payload/Replica.app/PlugIns -name "_CodeSignature" -type d -exec rm -rf {} + 2>/dev/null || true
+          
+          # Check all .appex and .framework for code signing
+          find Payload/Replica.app -name "*.appex" -o -name "*.framework" | while read bundle; do
+            rm -rf "$bundle/_CodeSignature" 2>/dev/null || true
+          done
+          
+          echo "Code signing stripped"
+      
+      - name: Create unsigned IPA
+        run: |
+          cd Payload
+          zip -r ../mirror.ipa Replica.app
+          cd ..
+          ls -lh mirror.ipa
+      
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mirror
+          path: mirror.ipa
+          retention-days: 30
+      
+      - name: Upload to Release (if tagged)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: mirror.ipa
+          draft: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
