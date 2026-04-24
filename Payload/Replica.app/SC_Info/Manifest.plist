@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>SinfPaths</key>
+	<array>
+		<string>SC_Info/Replica.sinf</string>
+	</array>
+	<key>SinfReplicationPaths</key>
+	<array>
+		<string>Frameworks/Beacon.framework/SC_Info/Beacon.sinf</string>
+		<string>Frameworks/CastFoundation_31B326782188FFB0_PackageProduct.framework/SC_Info/CastFoundation_31B326782188FFB0_PackageProduct.sinf</string>
+		<string>Frameworks/CastKit.framework/SC_Info/CastKit.sinf</string>
+		<string>Frameworks/FirebaseAnalytics.framework/SC_Info/FirebaseAnalytics.sinf</string>
+		<string>Frameworks/GoogleAppMeasurement.framework/SC_Info/GoogleAppMeasurement.sinf</string>
+		<string>Frameworks/WebRTC.framework/SC_Info/WebRTC.sinf</string>
+		<string>PlugIns/ReplayKitSampleCast.appex/SC_Info/ReplayKitSampleCast.sinf</string>
+		<string>PlugIns/ReplicaWidgetExtension.appex/SC_Info/ReplicaWidgetExtension.sinf</string>
+		<string>PlugIns/share.appex/SC_Info/share.sinf</string>
+		<string>PlugIns/vpn.appex/SC_Info/vpn.sinf</string>
+		<string>SC_Info/Replica.sinf</string>
+	</array>
+</dict>
+</plist>
