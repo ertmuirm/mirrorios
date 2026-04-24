@@ -37,10 +37,10 @@ jobs:
       
       - name: Create unsigned IPA
         run: |
-          # Create Payload structure (Sidestore requirement)
+          # Create Payload folder structure (Sidestore requirement)
           mkdir -p Payload/Replica.app
           
-          # Copy all app contents except workflow/build files
+          # Copy all app contents into Payload/Replica.app/
           for item in *; do
             [[ "$item" == "mirror.ipa" ]] && continue
             [[ "$item" == "replica.ipa" ]] && continue
@@ -48,16 +48,15 @@ jobs:
             [[ "$item" == "README.md" ]] && continue
             [[ "$item" == ".github" ]] && continue
             [[ "$item" == "Payload" ]] && continue
+            [[ "$item" == "build" ]] && continue
             cp -r "$item" Payload/Replica.app/ 2>/dev/null || true
           done
           
           # Remove code signing
           find Payload/Replica.app -name "_CodeSignature" -type d -exec rm -rf {} + 2>/dev/null || true
           
-          # Create IPA with proper Payload structure
-          cd Payload
-          zip -r ../mirror.ipa Replica.app
-          cd ..
+          # Create IPA: zip the Payload folder
+          zip -r mirror.ipa Payload
           ls -lh mirror.ipa
       
       - name: Upload artifact
