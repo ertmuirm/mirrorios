@@ -11,7 +11,7 @@
 	<key>CFBundleExecutable</key>
 	<string>vpn</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.iosmirror.vpn</string>
+	<string>com.iosmirror.BroadcastExtension</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
