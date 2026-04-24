@@ -11,6 +11,9 @@ on:
     paths:
       - '**.plist'
       - '**.app'
+      - 'build.sh'
+      - 'build.yml'
+      - '.github/workflows/**'
       - 'Info.plist'
       - 'Frameworks/**'
       - 'PlugIns/**'
