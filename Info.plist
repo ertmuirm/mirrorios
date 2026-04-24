@@ -85,6 +85,14 @@
 				<string>replica</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.iosmirror.broadcast</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>mirror</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>3</string>
