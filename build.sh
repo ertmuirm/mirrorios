@@ -25,6 +25,7 @@ mkdir -p "${WORK_DIR}/Payload/${APP_NAME}.app"
 # Copy all app contents
 for item in *; do
     [ "$item" = "${OUTPUT_NAME}.ipa" ] && continue
+    [ "$item" = "replica.ipa" ] && continue
     [ "$item" = "build.sh" ] && continue
     [ "$item" = "README.md" ] && continue
     [ -e "$item" ] && cp -r "$item" "${WORK_DIR}/Payload/${APP_NAME}.app/" 2>/dev/null || true
